@@ -14,12 +14,13 @@ import App from './App';
 function* rootSaga() {
   yield takeEvery('GET_GARDEN', getGarden)
   yield takeEvery('ADD_PLANT', postPlant)
+  yield takeEvery('DELETE_PLANT', deletePlant)
  
 }
 function* getGarden(){
   try{
     const plantResponse = yield axios.get('/api/plant')
-    yield put({ type: 'SET_BASKET', payload: plantResponse.data });
+    yield put({ type: 'SET_GARDEN', payload: plantResponse.data });
     }
 catch(error){
     console.log('error with garden get request', error);
@@ -28,11 +29,19 @@ catch(error){
 function* postPlant(action){
   try{
     yield axios.post('/api/plant', action.payload)
-    yield put({ type: 'SET_BASKET'});
+    put({ type: 'SET_GARDEN'})
     }
 catch(error){
     console.log('error with garden post request', error);
 };
+}
+function* deletePlant(action){
+  try{
+      yield axios({method: 'DELETE',url: `/api/plant/${action.payload}`})
+      
+  }catch(error){
+      console.log('error in delete', error)
+  }
 }
 const sagaMiddleware = createSagaMiddleware();
 
@@ -45,7 +54,8 @@ const sagaMiddleware = createSagaMiddleware();
 
 const plantList = (state = [], action) => {
   switch (action.type) {
-    case 'SET_BASKET':
+    case 'SET_GARDEN':
+      console.log(action.payload)
       return  action.payload 
     default:
       return state;

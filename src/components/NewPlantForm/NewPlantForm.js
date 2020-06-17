@@ -8,17 +8,23 @@ const mapStateToProps = reduxState => ({
 class NewPlantForm extends Component {
     state = {
         newPlant: {
-            id: 4,
-            name: ''
+            name: '',
+            kingdom:'',
+            clade:'',
+            order:'',
+            family:'',
+            subfamily:'',
+            genus:''
         }
     }
+    
 
-    handleNameChange = event => {
+    handleNameChange = (event, type) => {
         console.log('event happended')
         this.setState({
             newPlant: {
                 ...this.state.newPlant,
-                name: event.target.value,
+                [type]: event.target.value,
             }
         });
     }
@@ -26,10 +32,16 @@ class NewPlantForm extends Component {
     addNewPlant = event => {
         event.preventDefault();
         this.props.dispatch({ type: 'ADD_PLANT', payload: this.state.newPlant })
+        this.props.dispatch({type:'GET_GARDEN'})
         this.setState({
             newPlant: {
-                id: this.state.newPlant.id + 1,
                 name: '',
+                kingdom:'',
+                clade:'',
+                order:'',
+                family:'',
+                subfamily:'',
+                genus:''
             }
         });
     }
@@ -38,9 +50,16 @@ class NewPlantForm extends Component {
         return (
             <div>
                 <h3>This is the form</h3>
-                <pre>{JSON.stringify(this.state)}</pre>
+                
                 <form onSubmit={this.addNewPlant}>
-                    <input type='text' value={this.state.newPlant.name} onChange={this.handleNameChange} />
+                    <input required type='text'placeholder='name' value={this.state.newPlant.name} onChange={(event) =>this.handleNameChange(event, 'name')} />
+                    <input required type='text' placeholder='kingdom' value={this.state.newPlant.kingdom} onChange={(event) =>this.handleNameChange(event, 'kingdom')} />
+                    <input required type='text' placeholder='clade' value={this.state.newPlant.clade} onChange={(event) =>this.handleNameChange(event, 'clade')} />
+                    <input required type='text'placeholder='order' value={this.state.newPlant.order} onChange={(event) =>this.handleNameChange(event, 'order')} />
+                    <input required type='text' placeholder='family' value={this.state.newPlant.family} onChange={(event) =>this.handleNameChange(event, 'family')} />
+                    <input required type='text' placeholder='subfamily' value={this.state.newPlant.subfamily} onChange={(event) =>this.handleNameChange(event, 'subfamily')} />
+                    <input required type='text' placeholder='genus' value={this.state.newPlant.genus} onChange={(event) =>this.handleNameChange(event, 'genus')} />
+                    
                     <input type='submit' value='Add New Plant' />
                 </form>
             </div>
